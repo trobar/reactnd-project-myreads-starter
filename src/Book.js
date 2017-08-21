@@ -9,17 +9,11 @@ class Book extends Component {
     }
     
     getShelf = (book) => {
-    	if (this.props.book.shelf)
-    		return this.props.book.shelf
-    	else 
-    		return 'none'
+    	 return this.props.book.shelf ? this.props.book.shelf : 'none';
     }
 
     getAuthors = (book) => {
-    	if (book.authors) 
-    		return book.authors.reduce((previous, current)=> (previous.concat(current,', ')),'').slice(0,-2)
-    	else 
-    		return 'No author'
+    	return book.authors ? book.authors.join(', ') : 'No author';
     }
 
 	render() {

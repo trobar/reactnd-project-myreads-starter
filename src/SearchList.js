@@ -5,32 +5,32 @@ import Book from './Book'
 
 class SearchList extends Component {
 	state = {
-		query : "",
+		query : '',
 		showingBooks : []
 	}
 
 
-	checkLibrary = (shelf,shelfName,book) => {
-		const filter=shelf.filter((mybook) => (mybook.id===book.id))
+	checkLibrary = (book) => {
+		const filter=this.props.library.filter((filterBook) => (filterBook.id===book.id))
 		if (filter.length>0) 
-			book.shelf=this.props.libraryName[shelfName]
+			book.shelf=filter[0].shelf
 	}
 
 	updateQuery = (query) => {
-		this.setState({query: query})
-		BooksAPI.search(this.state.query, 20).then( (books) => {
-			if ((books!==undefined)) {
-				books.map((book) => {
-					this.props.library.map((lib,libName) => {
-						this.checkLibrary(lib,libName,book)
-						return lib
-					})
-					return book
-				})	
-				this.setState({showingBooks:books})	
-			}
-		})
-
+		this.setState({query: query.trim()})
+		if (query.trim().length===0) {
+			this.setState({showingBooks:[]})	
+		} else {
+			BooksAPI.search(this.state.query, 20).then( (books) => {
+				if ((books!==undefined)) {
+					books.map((book) => { 
+						this.checkLibrary(book)
+						return book
+					})	
+					this.setState({showingBooks:books})	
+				}
+			})
+		}
 	}
 
 	render() {

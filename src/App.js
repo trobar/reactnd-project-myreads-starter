@@ -7,57 +7,22 @@ import SearchList from './SearchList'
 
 class BooksApp extends React.Component {
     state = {
-        booksCurrentlyReading: [],
-        booksWantToRead: [],
-        booksRead: [],
+        books: []
     }
 
     componentDidMount(){
 
         BooksAPI.getAll().then((books) => {
-            this.setState({booksCurrentlyReading:books.filter((books) => books.shelf === 'currentlyReading')})
-        })
-        BooksAPI.getAll().then((books) => {
-            this.setState({booksWantToRead:books.filter((books) => books.shelf === 'wantToRead')})
-        })
-        BooksAPI.getAll().then((books) => {
-            this.setState({booksRead:books.filter((books) => books.shelf === 'read')})
+          console.log(books)
+            this.setState({books:books})
         })
     }
 
     moveToShelf = (theBook,oldShelf,newShelf) => {
-
-         //Remove book from old shelf. None means remove from list
-        if (oldShelf==='currentlyReading') {
-            this.setState({booksCurrentlyReading:this.state.booksCurrentlyReading.filter((book) => book.id !==theBook.id)})
-        }
-        if (oldShelf==='wantToRead') {
-            this.setState({booksWantToRead:this.state.booksWantToRead.filter((book) => book.id !==theBook.id)})
-        }
-        if (oldShelf==='read') {
-            this.setState({booksRead:this.state.booksRead.filter((book) => book.id !==theBook.id)})
-        }
-
-        //Add book to new shelf
-        if (newShelf==='currentlyReading') {
-            BooksAPI.update(theBook,newShelf).then((book) => {
-                theBook.shelf=newShelf
-                this.setState({booksCurrentlyReading:this.state.booksCurrentlyReading.concat(theBook)})})
-        }
-        if (newShelf==='wantToRead') {
-            BooksAPI.update(theBook,newShelf).then((book) => {
-                theBook.shelf=newShelf
-                this.setState({booksWantToRead:this.state.booksWantToRead.concat(theBook)})})
-        }
-        if (newShelf==='read') {
-            BooksAPI.update(theBook,newShelf).then((book) => {
-                theBook.shelf=newShelf
-                this.setState({booksRead:this.state.booksRead.concat(theBook)})})
-        }
-        if (newShelf==='none') {
-            BooksAPI.update(theBook,newShelf).then((book) => {
-                theBook.shelf=newShelf})
-        }
+        const book = this.state.books.filter((filterBook) => (filterBook.id===theBook.id))
+        const localBook = book.length>0 ? book[0] : theBook 
+        BooksAPI.update(localBook,newShelf).then(localBook.shelf=newShelf)
+        this.setState({books:this.state.books.filter((filterBook) => (filterBook.id!==theBook.id)).concat(localBook)})  
     }
 
     render() {
@@ -65,7 +30,7 @@ class BooksApp extends React.Component {
             <div className="app">
                 <Route path="/search" render={({history}) => (
                     <SearchList moveToShelf={this.moveToShelf} 
-                        library={[this.state.booksRead,this.state.booksWantToRead,this.state.booksCurrentlyReading]}
+                        library={this.state.books}
                         libraryName={['read','wantToRead','currentlyReading']}
                     />
                 )}/>
@@ -76,9 +41,9 @@ class BooksApp extends React.Component {
                         </div>
                         <div className="list-books-content">
                             <div>
-                                <Bookshelf books={this.state.booksCurrentlyReading} shelfTitle="Currently Reading" moveToShelf={this.moveToShelf}/>
-                                <Bookshelf books={this.state.booksWantToRead} shelfTitle="Want to read" moveToShelf={this.moveToShelf}/>
-                                <Bookshelf books={this.state.booksRead} shelfTitle="Read" moveToShelf={this.moveToShelf}/>
+                                <Bookshelf books={this.state.books.filter((book) => (book.shelf==='currentlyReading'))} shelfTitle="Currently Reading" moveToShelf={this.moveToShelf}/>
+                                <Bookshelf books={this.state.books.filter((book) => (book.shelf==='wantToRead'))} shelfTitle="Want to read" moveToShelf={this.moveToShelf}/>
+                                <Bookshelf books={this.state.books.filter((book) => (book.shelf==='read'))} shelfTitle="Read" moveToShelf={this.moveToShelf}/>
                             </div>
                         </div>
                         <div className="open-search">
