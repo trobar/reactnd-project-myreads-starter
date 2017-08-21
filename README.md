@@ -1,9 +1,9 @@
 ## Start the App
 
-*Clone the project from github: git clone https://github.com/trobar/reactnd-project-myreads-starter.git
-*Navigate the the root folder of the repository and run: npm install
-*After all dependencies have been installed run: npm start 
-*Navigate to localhost:3000 to access the app
+* Clone the project from github: git clone https://github.com/trobar/reactnd-project-myreads-starter.git
+* Navigate the the root folder of the repository and run: npm install
+* After all dependencies have been installed run: npm start 
+* Navigate to localhost:3000 to access the app
 
 This is the starter template for the final assessment project for Udacity's React Fundamentals course, developed by [React Training](https://reacttraining.com). The goal of this template is to save you time by providing a static example of the CSS and HTML markup that may be used, but without any of the React code that is needed to complete the project. If you choose to start with this template, your job will be to add interactivity to the app by refactoring the static code in this template.
 
